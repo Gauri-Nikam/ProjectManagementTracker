@@ -55,7 +55,7 @@ namespace TeamMember.API.Controllers
         public async Task<ActionResult<long>> GetTaskCountById(int memberId)
         {
             var taskCount = await _repository.GetTaskCountById(memberId);
-            return taskCount;
+            return Ok(taskCount);
         }
     }
 }
