@@ -1,0 +1,203 @@
+{
+  "Routes": [
+    // Authentication Web API
+    {
+
+      "UpstreamPathTemplate": "/api/Account",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authentication-api",
+          "Port": "80"
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Account"
+    },
+    //Manager API
+    {
+      "DownstreamPathTemplate": "/projectmanagement/api/v1/Manager/GetMemberDetails",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "manager.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Manager/GetMemberDetails",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/projectmanagement/api/v1/Manager/GetMemberById/{memberId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "manager.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Manager/GetMemberById/{memberId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/projectmanagement/api/v1/Manager/AddMember",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "manager.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Manager/AddMember",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/projectmanagement/api/v1/Manager/UpdateAllocation/{memberId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "manager.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Manager/UpdateAllocation/{memberId}",
+      "UpstreamHttpMethod": [ "PATCH" ]
+    },
+    {
+      "DownstreamPathTemplate": "/projectmanagement/api/v1/Manager/AddTask",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "manager.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Manager/AddTask",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //TeamMember API
+    {
+      "DownstreamPathTemplate": "/projectmgmt/api/v1/Member/GetTasksById/{memberId}/{count}/{page}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "teammember.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Member/GetTasksById/{memberId}/{count}/{page}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/projectmgmt/api/v1/Member/GetTaskCountById/{memberId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "teammember.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Member/GetTaskCountById/{memberId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5005"
+  }
+}
+
+// for docker
+
+//{
+//  "Routes": [
+//    //Manager API
+//    {
+//      "DownstreamPathTemplate": "/projectmgmt/api/v1/Manager/GetMemberDetails",
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "manager.api",
+//          "Port": "80"
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Manager/GetMemberDetails",
+//      "UpstreamHttpMethod": [ "GET" ]
+//    },
+//    {
+//      "DownstreamPathTemplate": "/projectmgmt/api/v1/Manager/GetMemberById/{memberId}",
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "manager.api",
+//          "Port": "80"
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Manager/GetMemberById/{memberId}",
+//      "UpstreamHttpMethod": [ "GET" ]
+//    },
+//    {
+//      "DownstreamPathTemplate": "/projectmgmt/api/v1/Manager/AddMember",
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "manager.api",
+//          "Port": "80"
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Manager/AddMember",
+//      "UpstreamHttpMethod": [ "POST" ]
+//    },
+//    {
+//      "DownstreamPathTemplate": "/projectmgmt/api/v1/Manager/UpdateAllocation/{memberId}",
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "manager.api",
+//          "Port": "80"
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Manager/UpdateAllocation/{memberId}",
+//      "UpstreamHttpMethod": [ "PATCH" ]
+//    },
+//    {
+//      "DownstreamPathTemplate": "/projectmgmt/api/v1/Manager/AddTask",
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "manager.api",
+//          "Port": "80"
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Manager/AddTask",
+//      "UpstreamHttpMethod": [ "POST" ]
+//    },
+//    //TeamMember API
+//    {
+//      "DownstreamPathTemplate": "/projectmgmt/api/v1/Member/GetTaskById/{memberId}/{count}/{page}",
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "teammember.api",
+//          "Port": "80"
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Member/GetTaskById/{memberId}/{count}/{page}",
+//      "UpstreamHttpMethod": [ "GET" ]
+//    },
+//    {
+//      "DownstreamPathTemplate": "/projectmgmt/api/v1/Member/GetTaskCountById/{memberId}",
+//      "DownstreamScheme": "http",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "teammember.api",
+//          "Port": "80"
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Member/GetTaskCountById/{memberId}",
+//      "UpstreamHttpMethod": [ "GET" ]
+//    }
+//  ],
+//  "GlobalConfiguration": {
+//    "BaseUrl": "https://localhost:5005"
+//  }
+//}

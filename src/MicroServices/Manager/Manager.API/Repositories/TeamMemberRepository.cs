@@ -38,22 +38,26 @@ namespace Manager.API.Repositories
 
         public async Task<IEnumerable<TeamMember>> GetMemberDetails()
         {
-            return await _dbContext.TeamMembers.Find(_ => true).ToListAsync();
+            return await _dbContext.TeamMembers.Find(x => x.MemberId != null).ToListAsync();
         }
 
         public async Task UpdateAllocation(int memberId)
         {
-            var member = _dbContext.TeamMembers.AsQueryable().Where(x => x.MemberId == memberId).FirstOrDefault();
+            Console.WriteLine("member id =" + memberId);
+            if (memberId != 0)
+            {
+                var member = _dbContext.TeamMembers.AsQueryable().Where(x => x.MemberId == memberId).FirstOrDefault();
 
-            if (DateTime.Parse(member.ProjectEndDate).Date < DateTime.Now.Date)
-            {
-                await _dbContext.TeamMembers.UpdateOneAsync(x => x.MemberId == memberId,
-                    Builders<TeamMember>.Update.Set(y => y.AllocationPercentage, 0));
-            }
-            else if (DateTime.Parse(member.ProjectEndDate).Date >= DateTime.Now.Date)
-            {
-                await _dbContext.TeamMembers.UpdateOneAsync(x => x.MemberId == memberId,
-                    Builders<TeamMember>.Update.Set(y => y.AllocationPercentage, 100));
+                if (DateTime.Parse(member.ProjectEndDate).Date < DateTime.Now.Date)
+                {
+                    await _dbContext.TeamMembers.UpdateOneAsync(x => x.MemberId == memberId,
+                        Builders<TeamMember>.Update.Set(y => y.AllocationPercentage, 0));
+                }
+                else if (DateTime.Parse(member.ProjectEndDate).Date >= DateTime.Now.Date)
+                {
+                    await _dbContext.TeamMembers.UpdateOneAsync(x => x.MemberId == memberId,
+                        Builders<TeamMember>.Update.Set(y => y.AllocationPercentage, 100));
+                }
             }
 
         }

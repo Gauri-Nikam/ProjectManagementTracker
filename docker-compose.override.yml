@@ -1,0 +1,92 @@
+version: '3.4'
+
+services:
+  mongodatabase:
+    container_name: mongodatabase
+    restart: always
+    ports:
+      - "27017:27017" 
+    volumes:
+      - mongo_data:/data/db
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+
+  manager.api:
+    container_name: manager.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://mongodatabase:27017"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    depends_on:
+      - mongodatabase
+      - rabbitmq
+    ports:
+      - "8000:80"
+
+  teammember.api:
+    container_name: teammember.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://mongodatabase:27017"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    depends_on:
+      - mongodatabase
+      - rabbitmq
+    ports:
+      - "8001:80"
+
+  #firstgateway:
+  #  container_name: firstgateway
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  depends_on:
+  #    - manager.api
+  #    - teammember.api
+  #  ports:
+  #    - "8005:80"
+  #teammember.api:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  ports:
+  #    - "80"
+
+
+  ocoletapigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - manager.api
+      - teammember.api
+      - authentication.api
+    ports:
+      - "8010:80"
+    #ports:
+    #  - "80"
+
+
+
+
+  #authenticationwebapi:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  ports:
+  #    - "80"
+
+
+  authentication.api:
+    container_name: authentication.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "8011:80"
+

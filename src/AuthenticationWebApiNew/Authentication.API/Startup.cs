@@ -1,15 +1,18 @@
 using JwtAuthentocationManager;
-using Manager.API.Data;
-using Manager.API.Repositories;
-using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Manager.API
+namespace Authentication.API
 {
     public class Startup
     {
@@ -27,20 +30,9 @@ namespace Manager.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Manager.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Authentication.API", Version = "v1" });
             });
-
-            services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
-            services.AddScoped<IDbContext, DbContext>();
-            services.AddAutoMapper(typeof(Startup));
-            services.AddMassTransit(config => {
-                config.UsingRabbitMq((ctx, cfg) =>
-                {
-                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
-                });
-            });
-            services.AddCustomJwtAuthentication();
-            //services.AddMassTransitHostedService();
+            services.AddSingleton<JwtTokenHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,16 +42,15 @@ namespace Manager.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Manager.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Authentication.API v1"));
             }
 
-            app.UseCors(
-            options => options.WithOrigins("http://localhost:4200").AllowAnyMethod()
-            );
-
             app.UseRouting();
+            app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

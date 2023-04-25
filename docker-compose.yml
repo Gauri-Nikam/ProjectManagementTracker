@@ -1,0 +1,48 @@
+version: '3.4'
+
+services:
+  mongodatabase:
+    image: mongo
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+  manager.api:
+    image: ${DOCKER_REGISTRY-}managerapi
+    build:
+      context: .
+      dockerfile: src/Microservices/Manager/Manager.API/Dockerfile
+
+  teammember.api:
+    image: ${DOCKER_REGISTRY-}teammemberapi
+    build:
+      context: .
+      dockerfile: src/MicroServices/TeamMember/TeamMember.API/Dockerfile
+
+  ocoletapigateway:
+    image: ${DOCKER_REGISTRY-}ocoletapigateway
+    build:
+      context: .
+      dockerfile: src/ApiGateways/OcoletApiGateway/Dockerfile
+
+ 
+
+  #authenticationwebapi:
+  #  container_name: authentication-api
+  #  image: ${DOCKER_REGISTRY-}authenticationwebapi
+  #  build:
+  #    context: .
+  #    dockerfile: src/AuthenticationWebApi/Dockerfile
+
+  authentication.api:
+    image: ${DOCKER_REGISTRY-}authenticationapi
+    build:
+      context: .
+      dockerfile: src/AuthenticationWebApiNew/Authentication.API/Dockerfile
+
+volumes:
+  mongo_data:
+
+
+
+

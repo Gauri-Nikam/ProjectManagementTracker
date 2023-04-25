@@ -1,4 +1,5 @@
 using EventBus.Messages.Common;
+using JwtAuthentocationManager;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -48,7 +49,7 @@ namespace TeamMember.API
             services.AddScoped<ITasksRepository, TasksRepository>();
             services.AddScoped<IDbContext, DbContext>();
             services.AddScoped<TasksConsumer>();
-
+            services.AddCustomJwtAuthentication();
 
         }
 
@@ -66,7 +67,7 @@ namespace TeamMember.API
               options => options.WithOrigins("http://localhost:4200").AllowAnyMethod()
               );
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

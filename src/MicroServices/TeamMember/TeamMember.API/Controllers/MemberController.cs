@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace TeamMember.API.Controllers
         /// <param name="page"></param>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = "TeamMember")]
         [Route("{memberId}/{count}/{page}")]
         [ProducesResponseType(typeof(IEnumerable<Tasks>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Tasks>> GetTasksById(int memberId, int count, int page)
@@ -50,7 +52,8 @@ namespace TeamMember.API.Controllers
         /// <param name="memberId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("memberId")]
+        [Authorize(Roles = "TeamMember")]
+        [Route("{memberId}")]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<long>> GetTaskCountById(int memberId)
         {

@@ -3,6 +3,7 @@ using EventBus.Messages.Events;
 using Manager.API.Entities;
 using Manager.API.Repositories;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,6 +36,7 @@ namespace Manager.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         [ProducesResponseType(typeof(IEnumerable<TeamMember>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetMemberDetails()
         {
@@ -56,7 +58,8 @@ namespace Manager.API.Controllers
         /// <param name="memberId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("memberId")]
+        [Route("{memberId}")]
+        [Authorize(Roles = "Manager, TeamMember")]
         [ProducesResponseType(typeof(TeamMember), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<TeamMember>> GetMemberById(int memberId)
         {
@@ -75,9 +78,17 @@ namespace Manager.API.Controllers
         /// <param name="teamMember"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task AddMember([FromBody] TeamMember teamMember)
         {
-            await _repository.AddMember(teamMember);
+            try
+            {
+                await _repository.AddMember(teamMember);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         /// <summary>
@@ -86,7 +97,8 @@ namespace Manager.API.Controllers
         /// <param name="memberId"></param>
         /// <returns></returns>
         [HttpPatch]
-        [Route("memberId")]
+        [Route("{memberId}")]
+        [Authorize(Roles = "Manager")]
         public async Task UpdateAllocation(int memberId)
         {
             await _repository.UpdateAllocation(memberId);
@@ -100,6 +112,7 @@ namespace Manager.API.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> AddTask([FromBody] Tasks assignedTask)
         {
             try
